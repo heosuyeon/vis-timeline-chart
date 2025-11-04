@@ -6,13 +6,25 @@ on:
       - main
       - master
 
+# GitHub Pages 배포를 위한 권한 설정
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# 동시 배포 방지
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          ref: main # main 브랜치의 소스 코드를 체크아웃
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
