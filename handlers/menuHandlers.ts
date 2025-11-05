@@ -199,6 +199,8 @@ export function showHoverMenu(
   if (itemData.className === "group-label" && itemData.roomStatuses) {
     // 기존 내용 제거
     hoverMenu.innerHTML = "";
+    hoverMenu.classList.add("black-bg");
+    hoverMenu.classList.remove("white-bg");
 
     // roomStatuses를 timestamp 기준으로 날짜순 정렬
     var statuses = [...itemData.roomStatuses].sort(function (a: any, b: any) {
@@ -239,12 +241,10 @@ export function showHoverMenu(
       var label = document.createElement("div");
       label.className = "hover-menu-label";
       label.textContent = status.label || "";
-      label.style.flex = "1";
 
       var value = document.createElement("div");
       value.className = "hover-menu-value";
-      value.textContent = status.timestamp || "";
-      value.style.flex = "1";
+      value.textContent = `(${status.timestamp})` || "";
 
       row.appendChild(colorCircle);
       row.appendChild(label);
@@ -252,28 +252,37 @@ export function showHoverMenu(
       hoverMenu.appendChild(row);
     }
   } else {
+    hoverMenu.classList.remove("black-bg");
+    hoverMenu.classList.add("white-bg");
     // 일반 아이템 메뉴 내용 업데이트
     // 예제 데이터 - 실제로는 itemData에서 가져와야 함
     var roomStatus =
       "이용중(" + moment(itemData.start).format("YYYY-MM-DD HH:mm:ss") + ")";
     var contractNumber = itemData.contractNumber || "12345678";
     var contractDate = moment(itemData.start).format("YYYY-MM-DD");
-    var guest = itemData.guest || "김한수 / 34 / M(010-1234-5678)";
+    var guest =
+      itemData.guest ||
+      itemData.currentGuest ||
+      "김한수 / 34 / M(010-1234-5678)";
+    var contractPerson =
+      itemData.contractPerson || "조유리 / 34 /M(010-1234-5678)";
 
-    // 기존 구조 유지 (HTML이 이미 있는 경우)
-    var hoverRoomStatus = document.getElementById("hoverRoomStatus");
-    var hoverContractNumber = document.getElementById("hoverContractNumber");
-    var hoverContractDate = document.getElementById("hoverContractDate");
-    var hoverGuest = document.getElementById("hoverGuest");
+    // 계약기간 계산
+    var startDate = moment(itemData.start).format("YYYY-MM-DD");
+    var endDate = moment(itemData.end).subtract(1, "days").format("YYYY-MM-DD"); // end는 exclusive이므로 1일 빼기
+    var periodType = itemData.periodType || "1개월";
+    var contractType = itemData.contractType || "신규";
+    var contractPeriod = `${periodType} (${startDate} ~ ${endDate}) / ${contractType}`;
 
-    if (hoverRoomStatus) hoverRoomStatus.innerHTML = roomStatus;
-    if (hoverContractNumber) hoverContractNumber.innerHTML = contractNumber;
-    if (hoverContractDate) hoverContractDate.innerHTML = contractDate;
-    if (hoverGuest) hoverGuest.innerHTML = guest;
+    var entryFee = itemData.entryFee || "75 만원";
+    var paymentAmount = itemData.paymentAmount || "70 만원";
+    var accountInfo = itemData.accountInfo || "하나은행 1234567890 조유리";
+    var deposit = itemData.deposit || "200,000 원";
+    var additionalPaymentOption = itemData.additionalPaymentOption || "-";
 
-    // 기존 HTML 구조가 없으면 생성
-    if (!hoverRoomStatus) {
-      hoverMenu.innerHTML = `
+    // 일반 아이템 메뉴 HTML 생성 (index.html 구조와 동일)
+    hoverMenu.innerHTML = `
+      <div>
         <div class="hover-menu-row">
           <div class="hover-menu-label">방 상태</div>
           <div class="hover-menu-value" id="hoverRoomStatus">${roomStatus}</div>
@@ -290,8 +299,39 @@ export function showHoverMenu(
           <div class="hover-menu-label">입실자</div>
           <div class="hover-menu-value" id="hoverGuest">${guest}</div>
         </div>
-      `;
-    }
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">계약자</div>
+          <div class="hover-menu-value">${contractPerson}</div>
+        </div>
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">계약기간</div>
+          <div class="hover-menu-value">${contractPeriod}</div>
+        </div>
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">입실료</div>
+          <div class="hover-menu-value">${entryFee}</div>
+        </div>
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">결제금액</div>
+          <div class="hover-menu-value">${paymentAmount}</div>
+        </div>
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">계좌정보</div>
+          <div class="hover-menu-value">${accountInfo}</div>
+        </div>
+      </div>
+      <div>
+        <hr />
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">보증금</div>
+          <div class="hover-menu-value">${deposit}</div>
+        </div>
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">추가 결제옵션</div>
+          <div class="hover-menu-value">${additionalPaymentOption}</div>
+        </div>
+      </div>
+    `;
   }
 
   // 먼저 보이게 해서 크기를 측정
