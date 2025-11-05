@@ -3,6 +3,7 @@ import { DataSet } from "vis-data";
 import { logEvent, setHoveredItem } from "./logHandlers";
 import {
   showContextMenu,
+  showGroupContextMenu,
   hideHoverMenu,
   showHoverMenu,
   getContextMenuShown,
@@ -13,6 +14,7 @@ import {
   setCurrentHoveredItemId,
 } from "./menuHandlers";
 import { applyInlineStyles } from "../styles/inlineStyles";
+import { groupsJson } from "../data/groupsData";
 
 export function setupTimelineEventHandlers(
   timeline: Timeline,
@@ -54,9 +56,80 @@ export function setupTimelineEventHandlers(
     logEvent("click", properties);
 
     var existingMenu = document.getElementById("contextMenu");
-    var existingItem = existingMenu
-      ? (existingMenu as any).timelineProperties?.item
-      : null;
+
+    // 그룹 레이블 클릭 감지 (아이템 클릭이 아닐 때)
+    if (!properties.item && properties.event) {
+      var mouseX = properties.event.clientX;
+      var mouseY = properties.event.clientY;
+
+      // 모든 .vis-label 요소 찾기
+      var allLabels = document.querySelectorAll(".vis-label");
+      var clickedGroupId: number | null = null;
+
+      for (var i = 0; i < allLabels.length; i++) {
+        var label = allLabels[i] as HTMLElement;
+        var rect = label.getBoundingClientRect();
+
+        // 클릭 위치가 이 레이블 영역 안에 있는지 확인
+        if (
+          mouseX >= rect.left &&
+          mouseX <= rect.right &&
+          mouseY >= rect.top &&
+          mouseY <= rect.bottom
+        ) {
+          // .vis-inner 안에서 방 번호 추출
+          var visInner = label.querySelector(".vis-inner");
+          if (visInner) {
+            var contentDiv = visInner.querySelector("div");
+            if (contentDiv) {
+              var textContent = contentDiv.textContent || "";
+              var roomNumberMatch = textContent.match(/(\d+)호/);
+              if (roomNumberMatch) {
+                var roomNumber = roomNumberMatch[1];
+                var groupData = groupsJson.find(function (g: any) {
+                  return g.roomNumber === roomNumber;
+                });
+                if (groupData) {
+                  clickedGroupId = groupData.id;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // 그룹 레이블을 클릭한 경우
+      if (clickedGroupId !== null) {
+        // 클릭 이벤트 전파 중지
+        properties.event.stopPropagation();
+
+        // 호버 메뉴 숨기기
+        hideHoverMenu();
+
+        // 기존 메뉴가 있으면 닫기 (다른 그룹이든 같은 그룹이든 상관없이)
+        if (existingMenu) {
+          closeContextMenu();
+        }
+
+        // 그룹 정보를 properties에 추가
+        var groupProperties = {
+          ...properties,
+          group: clickedGroupId,
+          item: null,
+        };
+
+        // 약간의 지연을 주어 현재 클릭 이벤트가 처리된 후 메뉴 표시
+        setTimeout(function () {
+          showGroupContextMenu(
+            properties.event.clientX,
+            properties.event.clientY,
+            groupProperties
+          );
+        }, 10);
+        return;
+      }
+    }
 
     // 아이템을 클릭한 경우
     if (properties.item && properties.event) {
@@ -82,12 +155,8 @@ export function setupTimelineEventHandlers(
       // 호버 메뉴 숨기기
       hideHoverMenu();
 
-      // 다른 아이템을 클릭한 경우 또는 같은 아이템을 다시 클릭한 경우
-      if (existingMenu && existingItem !== properties.item) {
-        // 기존 메뉴 닫기
-        closeContextMenu();
-      } else if (existingMenu && existingItem === properties.item) {
-        // 같은 아이템을 다시 클릭한 경우 메뉴 닫기
+      // 기존 메뉴가 있으면 닫기 (다른 아이템이든 같은 아이템이든 상관없이)
+      if (existingMenu) {
         closeContextMenu();
       }
 
@@ -266,7 +335,7 @@ export function setupTimelineEventHandlers(
         showHoverMenu(properties.event.clientX, itemY, properties, items);
       }
     } else {
-      // 아이템 위가 아니고 메뉴 위도 아니면 메뉴 숨기기
+      // 아이템 위가 아니면 메뉴 숨기기
       if (!getIsHoverMenuHovered()) {
         hideHoverMenu();
       }
