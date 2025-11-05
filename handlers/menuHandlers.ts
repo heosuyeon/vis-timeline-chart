@@ -49,7 +49,12 @@ export function closeContextMenu() {
   }
 }
 
-export function showContextMenu(x: number, y: number, properties: any) {
+export function showContextMenu(
+  x: number,
+  y: number,
+  properties: any,
+  items?: DataSet<any>
+) {
   var contextMenu = document.getElementById("contextMenu");
   if (!contextMenu) return;
 
@@ -62,27 +67,64 @@ export function showContextMenu(x: number, y: number, properties: any) {
     currentCloseMenuHandler = null;
   }
 
-  // 일반 아이템용 메뉴 항목 동적 생성
-  const menuItems = [
-    "계약내용 관리 및 방 이동",
-    "---", // 구분선
-    "예약금 요청",
-    "보증금 입금일시 / 반환일시",
-    "결제 및 정산 현황",
-    "---", // 구분선
-    "메모",
-    "퇴실처리",
-  ];
+  // 아이템이 지나간 일정인지 확인
+  var isPastItem = false;
+  if (properties.item && items) {
+    var itemData: any = items.get(properties.item);
+    if (
+      itemData &&
+      itemData.className &&
+      itemData.className.includes("-past")
+    ) {
+      isPastItem = true;
+    }
+  }
 
-  // data-action 매핑
-  const actionMap: { [key: string]: string } = {
-    "계약내용 관리 및 방 이동": "contract",
-    "예약금 요청": "deposit",
-    "보증금 입금일시 / 반환일시": "guarantee",
-    "결제 및 정산 현황": "payment",
-    메모: "memo",
-    퇴실처리: "checkout",
-  };
+  // 일반 아이템용 메뉴 항목 동적 생성 (지나간 일정 여부에 따라 다름)
+  var menuItems: string[];
+  var actionMap: { [key: string]: string };
+
+  if (isPastItem) {
+    // 지나간 일정용 메뉴
+    menuItems = [
+      "계약내용 관리 및 방 이동",
+      "---", // 구분선
+      "결제 및 정산 현황",
+      "---", // 구분선
+      "입실자 평가 및 후기 관리",
+      "메모",
+      "계약 내용 삭제",
+    ];
+
+    actionMap = {
+      "계약내용 관리 및 방 이동": "contract",
+      "결제 및 정산 현황": "payment",
+      "입실자 평가 및 후기 관리": "review",
+      메모: "memo",
+      "계약 내용 삭제": "delete",
+    };
+  } else {
+    // 일반 아이템용 메뉴
+    menuItems = [
+      "계약내용 관리 및 방 이동",
+      "---", // 구분선
+      "예약금 요청",
+      "보증금 입금일시 / 반환일시",
+      "결제 및 정산 현황",
+      "---", // 구분선
+      "메모",
+      "퇴실처리",
+    ];
+
+    actionMap = {
+      "계약내용 관리 및 방 이동": "contract",
+      "예약금 요청": "deposit",
+      "보증금 입금일시 / 반환일시": "guarantee",
+      "결제 및 정산 현황": "payment",
+      메모: "memo",
+      퇴실처리: "checkout",
+    };
+  }
 
   contextMenu.innerHTML = "";
   for (var i = 0; i < menuItems.length; i++) {
@@ -339,6 +381,16 @@ export function handleContextMenuAction(action: string, properties: any) {
       break;
     case "checkout":
       Swal.fire("퇴실처리", "선택된 기능을 실행합니다.", "info");
+      break;
+    case "review":
+      Swal.fire(
+        "입실자 평가 및 후기 관리",
+        "선택된 기능을 실행합니다.",
+        "info"
+      );
+      break;
+    case "delete":
+      Swal.fire("계약 내용 삭제", "선택된 기능을 실행합니다.", "info");
       break;
   }
   logEvent("contextMenuAction", { action: action, properties: properties });

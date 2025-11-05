@@ -165,7 +165,8 @@ export function setupTimelineEventHandlers(
         showContextMenu(
           properties.event.clientX,
           properties.event.clientY,
-          properties
+          properties,
+          items
         );
       }, 10);
     } else {
