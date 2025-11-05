@@ -255,17 +255,33 @@ export function showHoverMenu(
     hoverMenu.classList.remove("black-bg");
     hoverMenu.classList.add("white-bg");
     // 일반 아이템 메뉴 내용 업데이트
-    // 예제 데이터 - 실제로는 itemData에서 가져와야 함
+    // 아이템 데이터에서 정보 가져오기
+
+    // 방 상태: className에 따라 표시
+    var statusText = "";
+    if (itemData.className === "in-progress") {
+      statusText = "이용중";
+    } else if (itemData.className === "for-sale") {
+      statusText = "판매중";
+    } else if (itemData.className === "checked-out") {
+      statusText = "퇴실확정";
+    } else {
+      statusText = "이용중";
+    }
     var roomStatus =
-      "이용중(" + moment(itemData.start).format("YYYY-MM-DD HH:mm:ss") + ")";
-    var contractNumber = itemData.contractNumber || "12345678";
+      statusText +
+      "(" +
+      moment(itemData.start).format("YYYY-MM-DD HH:mm:ss") +
+      ")";
+
+    var contractNumber = itemData.contractNumber || "00000000";
     var contractDate = moment(itemData.start).format("YYYY-MM-DD");
     var guest =
       itemData.guest ||
-      itemData.currentGuest ||
-      "김한수 / 34 / M(010-1234-5678)";
-    var contractPerson =
-      itemData.contractPerson || "조유리 / 34 /M(010-1234-5678)";
+      (itemData.currentGuest
+        ? itemData.currentGuest + " / - / -(-)"
+        : "- / - / -(-)");
+    var contractPerson = itemData.contractPerson || guest;
 
     // 계약기간 계산
     var startDate = moment(itemData.start).format("YYYY-MM-DD");
@@ -274,10 +290,10 @@ export function showHoverMenu(
     var contractType = itemData.contractType || "신규";
     var contractPeriod = `${periodType} (${startDate} ~ ${endDate}) / ${contractType}`;
 
-    var entryFee = itemData.entryFee || "75 만원";
-    var paymentAmount = itemData.paymentAmount || "70 만원";
-    var accountInfo = itemData.accountInfo || "하나은행 1234567890 조유리";
-    var deposit = itemData.deposit || "200,000 원";
+    var entryFee = itemData.entryFee || "-";
+    var paymentAmount = itemData.paymentAmount || "-";
+    var accountInfo = itemData.accountInfo || "-";
+    var deposit = itemData.deposit || "-";
     var additionalPaymentOption = itemData.additionalPaymentOption || "-";
 
     // 일반 아이템 메뉴 HTML 생성 (index.html 구조와 동일)

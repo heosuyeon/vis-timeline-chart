@@ -19,6 +19,17 @@ export function createItemsDataSet(): DataSet<any> {
       style:
         "background-color: #ED946B; border: 2px solid transparent; color: white; border-radius: 8px;",
       className: "in-progress",
+      // 호버 메뉴용 정보
+      contractNumber: "20251001001",
+      guest: "김한수 / 34 / M(010-1234-5678)",
+      contractPerson: "김한수 / 34 / M(010-1234-5678)",
+      periodType: "1개월",
+      contractType: "신규",
+      entryFee: "75 만원",
+      paymentAmount: "70 만원",
+      accountInfo: "하나은행 1234567890 김한수",
+      deposit: "200,000 원",
+      additionalPaymentOption: "-",
     },
     {
       id: "0-1",
@@ -30,6 +41,17 @@ export function createItemsDataSet(): DataSet<any> {
       style:
         "background-color: #ED946B; border: 2px solid transparent; color: white; border-radius: 8px;",
       className: "in-progress",
+      // 호버 메뉴용 정보
+      contractNumber: "20251101001",
+      guest: "김한수 / 34 / M(010-1234-5678)",
+      contractPerson: "김한수 / 34 / M(010-1234-5678)",
+      periodType: "1개월",
+      contractType: "연장",
+      entryFee: "75 만원",
+      paymentAmount: "70 만원",
+      accountInfo: "하나은행 1234567890 김한수",
+      deposit: "200,000 원",
+      additionalPaymentOption: "-",
     },
     {
       id: "2",
@@ -41,6 +63,17 @@ export function createItemsDataSet(): DataSet<any> {
       style:
         "background-color: #27A644; border: 2px solid transparent; color: white; border-radius: 8px;",
       className: "for-sale",
+      // 호버 메뉴용 정보
+      contractNumber: "20251020002",
+      guest: "이정민 / 28 / F(010-2345-6789)",
+      contractPerson: "이정민 / 28 / F(010-2345-6789)",
+      periodType: "1개월",
+      contractType: "신규",
+      entryFee: "80 만원",
+      paymentAmount: "75 만원",
+      accountInfo: "국민은행 2345678901 이정민",
+      deposit: "250,000 원",
+      additionalPaymentOption: "주차비 10만원",
     },
     {
       id: "3",
@@ -52,6 +85,17 @@ export function createItemsDataSet(): DataSet<any> {
       style:
         "background-color: #AA00D0; border: 2px solid transparent; color: white; border-radius: 8px;",
       className: "checked-out",
+      // 호버 메뉴용 정보
+      contractNumber: "20251104003",
+      guest: "황정민 / 31 / M(010-3456-7890)",
+      contractPerson: "황정민 / 31 / M(010-3456-7890)",
+      periodType: "1개월",
+      contractType: "신규",
+      entryFee: "85 만원",
+      paymentAmount: "80 만원",
+      accountInfo: "신한은행 3456789012 황정민",
+      deposit: "300,000 원",
+      additionalPaymentOption: "-",
     },
   ];
 

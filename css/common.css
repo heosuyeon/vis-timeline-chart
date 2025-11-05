@@ -52,42 +52,27 @@
   margin: 8px 0;
 }
 
-.hover-menu {
+#hoverMenu {
   display: none;
   position: absolute;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   padding: 12px;
   min-width: 280px;
   z-index: 1001;
-  font-size: 13px;
-}
-
-.hover-menu-row {
-  display: flex;
-  margin-bottom: 8px;
-  align-items: flex-start;
-}
-
-.hover-menu-label {
-  font-weight: bold;
-  min-width: 80px;
-  color: #555;
-}
-.hover-menu-value {
-  /* flex: 1; */
-  color: #333;
-}
-
-#hoverMenu {
   border: none;
   border-radius: 8px;
+  backdrop-filter: blur(8px);
+
+  .hover-menu-row {
+    display: flex;
+    margin-bottom: 8px;
+    align-items: flex-start;
+  }
 }
+
+/* 방 상태 라벨 호버시 */
 #hoverMenu.black-bg {
   background-color: #000000cc;
-  backdrop-filter: blur(8px);
   .hover-menu-label,
   .hover-menu-value {
     color: #fff;
@@ -95,6 +80,16 @@
     font-size: 13px;
   }
 }
+/* bar 형태의 아이템 호버시 */
 #hoverMenu.white-bg {
   background-color: #ffffffcc;
+  color: #495057;
+  font-size: 12px;
+  .hover-menu-label {
+    font-weight: 400;
+  }
+  .hover-menu-value {
+    font-weight: 500;
+    margin-left: auto;
+  }
 }
