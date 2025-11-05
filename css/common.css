@@ -93,3 +93,7 @@
     margin-left: auto;
   }
 }
+
+.group:hover {
+  background-color: #f5f9ff;
+}

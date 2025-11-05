@@ -113,26 +113,63 @@ export function createGroupsDataSet(): DataSet<any> {
   var groupsData = [];
   for (var i = 0; i < groupsJson.length; i++) {
     var data = groupsJson[i];
+
+    // DOM 요소 생성
+    var container = document.createElement("div");
+    container.style.height = "100%";
+    container.classList.add("group");
+
+    // 배경색 div
+    var sidebarDiv = document.createElement("div");
+    sidebarDiv.style.backgroundColor = data.color.sidebar;
+    container.appendChild(sidebarDiv);
+
+    // 내용 div
+    var contentDiv = document.createElement("div");
+
+    // 첫 번째 줄: 방 번호와 상태
+    var firstLine = document.createElement("div");
+    var roomNumberBold = document.createElement("b");
+    roomNumberBold.textContent = `${data.roomNumber}호 (${data.roomName})`;
+    firstLine.appendChild(roomNumberBold);
+
+    var statusSpan = document.createElement("span");
+    statusSpan.style.color = data.color.statusText;
+    statusSpan.style.borderColor = data.color.statusBorder;
+    statusSpan.style.border = `2px solid ${data.color.statusBorder}`;
+    statusSpan.textContent = data.status;
+    firstLine.appendChild(statusSpan);
+
+    contentDiv.appendChild(firstLine);
+
+    // 두 번째 줄: 타입, 창문, 월세
+    var secondLine = document.createElement("p");
+    secondLine.textContent = `${data.type} / ${
+      data.window
+    } / 월 ${data.monthlyRent.toLocaleString()}원`;
+    contentDiv.appendChild(secondLine);
+
+    // 세 번째 줄: 현재 입실자 정보
+    var thirdLine = document.createElement("div");
+    var currentGuestLabel = document.createElement("span");
+    currentGuestLabel.style.color = "#E44343";
+    currentGuestLabel.textContent = "현재 입실자 ";
+    thirdLine.appendChild(currentGuestLabel);
+
+    var currentGuestSpan = document.createElement("span");
+    currentGuestSpan.textContent = data.currentGuest + " ";
+    thirdLine.appendChild(currentGuestSpan);
+
+    var stayPeriodSpan = document.createElement("span");
+    stayPeriodSpan.textContent = data.stayPeriod;
+    thirdLine.appendChild(stayPeriodSpan);
+
+    contentDiv.appendChild(thirdLine);
+    container.appendChild(contentDiv);
+
     groupsData.push({
       id: data.id,
-      content: `<div style="height: 100% !important;">
-      <div style="background-color: ${data.color.sidebar};"></div>
-      <div>
-        <div><b>${data.roomNumber}호 (${
-        data.roomName
-      })</b><span style="color: ${data.color.statusText}; border-color: ${
-        data.color.statusBorder
-      }; border: 2px solid ${data.color.statusBorder};">${
-        data.status
-      }</span></div>
-        <p>${data.type} / ${
-        data.window
-      } / 월 ${data.monthlyRent.toLocaleString()}원</p>
-        <div><span style="color:#E44343;">현재 입실자</span> <span>${
-          data.currentGuest
-        }</span> <span>${data.stayPeriod}</span></div>
-      </div>
-    </div>`,
+      content: container, // DOM 요소 직접 할당
       value: data.value,
     });
   }
