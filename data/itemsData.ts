@@ -16,8 +16,7 @@ export function createItemsDataSet(): DataSet<any> {
       currentGuest: "김한수",
       start: parseDateString("2025-10-01"),
       end: parseEndDateString("2025-10-31"),
-      style:
-        "background-color: #ED946B; border: 2px solid transparent; color: white; border-radius: 8px;",
+      style: "border: 2px solid transparent; color: white; border-radius: 8px;",
       className: "in-progress",
       // 호버 메뉴용 정보
       contractNumber: "20251001001",
@@ -38,8 +37,7 @@ export function createItemsDataSet(): DataSet<any> {
       currentGuest: "김한수",
       start: parseDateString("2025-11-01"),
       end: parseEndDateString("2025-11-30"),
-      style:
-        "background-color: #ED946B; border: 2px solid transparent; color: white; border-radius: 8px;",
+      style: "border: 2px solid transparent; color: white; border-radius: 8px;",
       className: "in-progress",
       // 호버 메뉴용 정보
       contractNumber: "20251101001",
@@ -60,8 +58,7 @@ export function createItemsDataSet(): DataSet<any> {
       currentGuest: "이정민",
       start: parseDateString("2025-10-20"),
       end: parseEndDateString("2025-11-20"),
-      style:
-        "background-color: #27A644; border: 2px solid transparent; color: white; border-radius: 8px;",
+      style: "border: 2px solid transparent; color: white; border-radius: 8px;",
       className: "for-sale",
       // 호버 메뉴용 정보
       contractNumber: "20251020002",
@@ -82,8 +79,7 @@ export function createItemsDataSet(): DataSet<any> {
       currentGuest: "황정민",
       start: parseDateString("2025-11-04"),
       end: parseEndDateString("2025-12-04"),
-      style:
-        "background-color: #AA00D0; border: 2px solid transparent; color: white; border-radius: 8px;",
+      style: "border: 2px solid transparent; color: white; border-radius: 8px;",
       className: "checked-out",
       // 호버 메뉴용 정보
       contractNumber: "20251104003",
@@ -99,14 +95,9 @@ export function createItemsDataSet(): DataSet<any> {
     },
   ];
 
-  // room-statuses이 아닌 아이템만 필터링
-  const regularItems = baseItems.filter(
-    (item) => item.className !== "room-statuses"
-  );
-
   // group별로 아이템 그룹핑
   const itemsByGroup = new Map<number, any[]>();
-  regularItems.forEach((item) => {
+  baseItems.forEach((item) => {
     const groupId = item.group;
     if (!itemsByGroup.has(groupId)) {
       itemsByGroup.set(groupId, []);
@@ -117,10 +108,23 @@ export function createItemsDataSet(): DataSet<any> {
   // 결과 배열 초기화
   const resultItems: any[] = [];
 
+  // 현재 날짜 (시간 제외)
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
   // 각 그룹별로 처리
   itemsByGroup.forEach((items, groupId) => {
     // 해당 그룹의 일반 아이템들을 먼저 추가
     items.forEach((item) => {
+      // end 날짜가 현재 날짜보다 이전인지 확인 (시간 제외)
+      const itemEnd = new Date(item.end);
+      itemEnd.setHours(0, 0, 0, 0);
+
+      // 지난 일정인 경우 -past를 클래스명 뒤에 추가
+      if (itemEnd < now) {
+        item.className = item.className ? `${item.className}-past` : "";
+      }
+
       resultItems.push(item);
     });
 

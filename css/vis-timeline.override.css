@@ -116,34 +116,69 @@
 .vis-time-axis .vis-text.vis-sunday {
   color: white;
 }
-.vis-item.in-progress:hover {
-  border: 2px solid #a93434 !important;
-  box-shadow: 0px 4px 8px 0px #00000014;
+
+/* 진행 중인 '이용중' 일정 스타일 */
+.vis-item.in-progress {
+  background-color: #ed946b;
 }
-.vis-item.in-progress.vis-selected {
-  border: 2px solid #a93434 !important;
-  background: #ee4d4d33 !important;
-  box-shadow: 0px 4px 8px 0px #00000014;
+/* 지나간 '이용중' 일정 스타일 */
+.vis-item.in-progress-past {
+  background: #ee4d4d33;
   color: #ed946b !important;
 }
-.vis-item.for-sale:hover {
-  border: 2px solid #066d1e !important;
+/* '이용중' 일정 호버 및 선택시 */
+.vis-item.in-progress:hover,
+.vis-item.in-progress-past:hover,
+.vis-item.in-progress.vis-selected {
+  border: 2px solid #a93434 !important;
   box-shadow: 0px 4px 8px 0px #00000014;
 }
-.vis-item.for-sale.vis-selected {
-  border: 2px solid #066d1e !important;
-  background: #27a64433 !important;
+/* 지나간 '이용중' 일정 선택시 */
+.vis-item.in-progress-past.vis-selected {
+  border: 2px solid #a93434 !important;
   box-shadow: 0px 4px 8px 0px #00000014;
+}
+/* 진행 중인 '판매중' 일정 스타일 */
+.vis-item.for-sale {
+  background-color: #27a644;
+}
+/* 지나간 '판매중' 일정 스타일 */
+.vis-item.for-sale-past {
+  background: #066d1e33;
   color: #27a644 !important;
 }
-.vis-item.checked-out:hover {
+/* 진행 중인 '판매중' 일정 호버 및 선택시 */
+.vis-item.for-sale:hover,
+.vis-item.for-sale-past:hover,
+.vis-item.for-sale.vis-selected {
+  border: 2px solid #066d1e !important;
+  box-shadow: 0px 4px 8px 0px #00000014;
+}
+/* 지나간 판매 중 일정 선택시 */
+.vis-item.for-sale-past.vis-selected {
+  border: 2px solid #066d1e !important;
+  box-shadow: 0px 4px 8px 0px #00000014;
+}
+
+/* 진행 중인 '퇴실' 일정 스타일 */
+.vis-item.checked-out {
+  background-color: #aa00d0;
+}
+/* 지나간 '퇴실' 일정 스타일 */
+.vis-item.checked-out-past {
+  background: #aa00d033;
+  color: #aa00d0 !important;
+}
+/* 퇴실 중 일정 호버 및 선택시 */
+.vis-item.checked-out:hover,
+.vis-item.checked-out-past:hover,
+.vis-item.checked-out.vis-selected {
   border: 2px solid #7c0098 !important;
   box-shadow: 0px 4px 8px 0px #00000014;
 }
-.vis-item.checked-out.vis-selected {
+/* 지나간 퇴실 중 일정 선택시 */
+.vis-item.checked-out-past.vis-selected {
   border: 2px solid #7c0098 !important;
-  background: #aa00d033 !important;
-  color: #aa00d0 !important;
   box-shadow: 0px 4px 8px 0px #00000014;
 }
 /* 
