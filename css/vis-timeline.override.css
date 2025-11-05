@@ -62,7 +62,7 @@
   gap: 8px;
   text-wrap: nowrap;
 }
-.vis-item.group-label {
+.vis-item.room-statuses {
   padding: 0 !important;
   border: none !important;
   background-color: transparent !important;
@@ -73,7 +73,7 @@
 .vis-item-content {
   padding: 0 !important;
 }
-.group-label .vis-item-content {
+.room-statuses .vis-item-content {
   width: 100%;
 }
 /* 타임라인 그리드 스타일 */

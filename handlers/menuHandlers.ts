@@ -376,8 +376,8 @@ export function showHoverMenu(
   if (!itemData) return;
 
   // 메뉴 내용 먼저 업데이트 (크기 측정 전에)
-  // group-label 아이템인 경우 roomStatuses 리스트 표시
-  if (itemData.className === "group-label" && itemData.roomStatuses) {
+  // room-statuses 아이템인 경우 roomStatuses 리스트 표시
+  if (itemData.className === "room-statuses" && itemData.roomStatuses) {
     // 기존 내용 제거
     hoverMenu.innerHTML = "";
     hoverMenu.classList.add("black-bg");

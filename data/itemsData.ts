@@ -99,9 +99,9 @@ export function createItemsDataSet(): DataSet<any> {
     },
   ];
 
-  // group-label이 아닌 아이템만 필터링
+  // room-statuses이 아닌 아이템만 필터링
   const regularItems = baseItems.filter(
-    (item) => item.className !== "group-label"
+    (item) => item.className !== "room-statuses"
   );
 
   // group별로 아이템 그룹핑
@@ -124,7 +124,7 @@ export function createItemsDataSet(): DataSet<any> {
       resultItems.push(item);
     });
 
-    // 같은 그룹에 아이템이 2개 이상인 경우 group-label 추가
+    // 같은 그룹에 아이템이 2개 이상인 경우 room-statuses 추가
     if (items.length >= 2) {
       // 가장 빠른 start 날짜 찾기
       const earliestStart = items.reduce((earliest, item) => {
@@ -136,7 +136,7 @@ export function createItemsDataSet(): DataSet<any> {
         return item.end > latest ? item.end : latest;
       }, items[0].end);
 
-      // group-label의 시작일은 가장 빠른 start 날짜의 하루 전
+      // room-statuses의 시작일은 가장 빠른 start 날짜의 하루 전
       const groupLabelStart = new Date(earliestStart);
       groupLabelStart.setDate(groupLabelStart.getDate() - 1);
 
@@ -147,9 +147,9 @@ export function createItemsDataSet(): DataSet<any> {
       const groupData = groupsJson.find((g) => g.id === groupId);
       const roomStatuses = groupData?.roomStatuses;
 
-      // group-label 아이템 생성 (roomStatuses를 전달하여 컬러와 개수 표시)
+      // room-statuses 아이템 생성 (roomStatuses를 전달하여 컬러와 개수 표시)
       const groupLabelItem = {
-        id: `group-label-${groupId}`,
+        id: `room-statuses-${groupId}`,
         group: groupId,
         content: getGroupLabelContent(
           groupLabelStart,
@@ -158,7 +158,7 @@ export function createItemsDataSet(): DataSet<any> {
           undefined
         ),
         currentGuest: currentGuest,
-        className: "group-label",
+        className: "room-statuses",
         start: groupLabelStart,
         end: latestEnd,
         roomStatuses: roomStatuses, // 호버 메뉴에서 사용하기 위해 저장

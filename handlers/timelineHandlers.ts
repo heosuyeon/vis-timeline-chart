@@ -135,9 +135,9 @@ export function setupTimelineEventHandlers(
     if (properties.item && properties.event) {
       // 아이템 데이터 가져오기
       var itemData: any = items.get(properties.item);
-      var isGroupLabel = itemData && itemData.className === "group-label";
+      var isGroupLabel = itemData && itemData.className === "room-statuses";
 
-      // group-label 아이템을 클릭한 경우 컨텍스트 메뉴 표시하지 않음
+      // room-statuses 아이템을 클릭한 경우 컨텍스트 메뉴 표시하지 않음
       if (isGroupLabel) {
         // 호버 메뉴 숨기기
         hideHoverMenu();
@@ -145,7 +145,7 @@ export function setupTimelineEventHandlers(
         if (existingMenu) {
           closeContextMenu();
         }
-        return; // group-label 클릭 시 더 이상 처리하지 않음
+        return; // room-statuses 클릭 시 더 이상 처리하지 않음
       }
 
       // 일반 아이템인 경우에만 컨텍스트 메뉴 표시
@@ -209,9 +209,9 @@ export function setupTimelineEventHandlers(
     if (properties.item && properties.event) {
       // 아이템 데이터 가져오기
       var itemData: any = items.get(properties.item);
-      var isGroupLabel = itemData && itemData.className === "group-label";
+      var isGroupLabel = itemData && itemData.className === "room-statuses";
 
-      // group-label 아이템인 경우 카운트 뱃지 위에 있는지 확인
+      // room-statuses 아이템인 경우 카운트 뱃지 위에 있는지 확인
       if (isGroupLabel) {
         // 아이템 요소 찾기
         var itemElement: HTMLElement | null = null;

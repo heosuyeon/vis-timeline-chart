@@ -43,10 +43,10 @@ export function createItemsFromServerData(
   const items: any[] = [];
   let itemIdCounter = 0;
 
-  // 먼저 방(그룹)별로 group-label 아이템 생성 (상태가 있는 경우)
+  // 먼저 방(그룹)별로 room-statuses 아이템 생성 (상태가 있는 경우)
   if (roomsData) {
     for (const roomData of roomsData) {
-      // 방 상태가 있고 최대 4개까지 있는 경우에만 group-label 생성
+      // 방 상태가 있고 최대 4개까지 있는 경우에만 room-statuses 생성
       if (roomData.statuses && roomData.statuses.length > 0) {
         const allStatuses = roomData.statuses; // 전체 상태 리스트
         const start = parseDateString(roomData.startDate);
@@ -58,7 +58,7 @@ export function createItemsFromServerData(
           // 전체 상태 리스트를 전달 (함수 내에서 최대 4개만 표시)
           content: getGroupLabelContent(start, end, allStatuses),
           currentGuest: roomData.currentGuest,
-          className: "group-label",
+          className: "room-statuses",
           start: start,
           end: end,
           // 전체 상태 리스트 저장 (호버메뉴용)

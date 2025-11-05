@@ -7,8 +7,8 @@ export function applyInlineStyles(
 ) {
   if (!container) return;
 
-  // group-label 클래스를 가진 아이템만 스타일 적용
-  var itemElements = container.querySelectorAll(".vis-item.group-label");
+  // room-statuses 클래스를 가진 아이템만 스타일 적용
+  var itemElements = container.querySelectorAll(".vis-item.room-statuses");
   for (var i = 0; i < itemElements.length; i++) {
     var itemElement = itemElements[i] as HTMLElement;
     var itemContent = itemElement.querySelector(".vis-item-content");

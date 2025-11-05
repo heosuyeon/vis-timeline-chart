@@ -14,7 +14,7 @@ function extractBackgroundColor(style: string): string | null {
   return match ? match[1].trim() : null;
 }
 
-// group-label 아이템의 content를 생성하는 함수
+// room-statuses 아이템의 content를 생성하는 함수
 export function getGroupLabelContent(
   start: Date,
   end: Date,
@@ -165,7 +165,7 @@ export function getGroupLabelContent(
   return container;
 }
 
-// 일반 아이템의 content를 생성하는 함수 (group-label이 아닌 아이템용)
+// 일반 아이템의 content를 생성하는 함수 (room-statuses이 아닌 아이템용)
 export function getItemContent(
   startDateString: string,
   endDateString: string,
