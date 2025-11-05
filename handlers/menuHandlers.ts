@@ -194,18 +194,105 @@ export function showHoverMenu(
   var itemData: any = items.get(item);
   if (!itemData) return;
 
-  // 메뉴 내용 업데이트
-  // 예제 데이터 - 실제로는 itemData에서 가져와야 함
-  var roomStatus =
-    "이용중(" + moment(itemData.start).format("YYYY-MM-DD HH:mm:ss") + ")";
-  var contractNumber = itemData.contractNumber || "12345678";
-  var contractDate = moment(itemData.start).format("YYYY-MM-DD");
-  var guest = itemData.guest || "김한수 / 34 / M(010-1234-5678)";
+  // 메뉴 내용 먼저 업데이트 (크기 측정 전에)
+  // group-label 아이템인 경우 roomStatuses 리스트 표시
+  if (itemData.className === "group-label" && itemData.roomStatuses) {
+    // 기존 내용 제거
+    hoverMenu.innerHTML = "";
 
-  document.getElementById("hoverRoomStatus")!.innerHTML = roomStatus;
-  document.getElementById("hoverContractNumber")!.innerHTML = contractNumber;
-  document.getElementById("hoverContractDate")!.innerHTML = contractDate;
-  document.getElementById("hoverGuest")!.innerHTML = guest;
+    // roomStatuses를 timestamp 기준으로 날짜순 정렬
+    var statuses = [...itemData.roomStatuses].sort(function (a: any, b: any) {
+      // timestamp 형식: "25-10-29 09:24:00" -> "2025-10-29 09:24:00"으로 변환
+      var parseTimestamp = function (ts: string): Date {
+        var parts = ts.split(" ");
+        var datePart = parts[0];
+        var timePart = parts[1] || "00:00:00";
+        var dateParts = datePart.split("-");
+        var year = "20" + dateParts[0];
+        return new Date(
+          year + "-" + dateParts[1] + "-" + dateParts[2] + " " + timePart
+        );
+      };
+
+      var dateA = parseTimestamp(a.timestamp);
+      var dateB = parseTimestamp(b.timestamp);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    // 상태 리스트 표시
+    for (var i = 0; i < statuses.length; i++) {
+      var status = statuses[i];
+      var row = document.createElement("div");
+      row.className = "hover-menu-row";
+      row.style.display = "flex";
+      row.style.alignItems = "center";
+      row.style.gap = "8px";
+
+      // 왼쪽에 10x10 동그라미 span 추가
+      var colorCircle = document.createElement("span");
+      colorCircle.style.width = "10px";
+      colorCircle.style.height = "10px";
+      colorCircle.style.borderRadius = "50%";
+      colorCircle.style.backgroundColor = status.color || "#27A644";
+      colorCircle.style.flexShrink = "0";
+
+      var label = document.createElement("div");
+      label.className = "hover-menu-label";
+      label.textContent = status.label || "";
+      label.style.flex = "1";
+
+      var value = document.createElement("div");
+      value.className = "hover-menu-value";
+      value.textContent = status.timestamp || "";
+      value.style.flex = "1";
+
+      row.appendChild(colorCircle);
+      row.appendChild(label);
+      row.appendChild(value);
+      hoverMenu.appendChild(row);
+    }
+  } else {
+    // 일반 아이템 메뉴 내용 업데이트
+    // 예제 데이터 - 실제로는 itemData에서 가져와야 함
+    var roomStatus =
+      "이용중(" + moment(itemData.start).format("YYYY-MM-DD HH:mm:ss") + ")";
+    var contractNumber = itemData.contractNumber || "12345678";
+    var contractDate = moment(itemData.start).format("YYYY-MM-DD");
+    var guest = itemData.guest || "김한수 / 34 / M(010-1234-5678)";
+
+    // 기존 구조 유지 (HTML이 이미 있는 경우)
+    var hoverRoomStatus = document.getElementById("hoverRoomStatus");
+    var hoverContractNumber = document.getElementById("hoverContractNumber");
+    var hoverContractDate = document.getElementById("hoverContractDate");
+    var hoverGuest = document.getElementById("hoverGuest");
+
+    if (hoverRoomStatus) hoverRoomStatus.innerHTML = roomStatus;
+    if (hoverContractNumber) hoverContractNumber.innerHTML = contractNumber;
+    if (hoverContractDate) hoverContractDate.innerHTML = contractDate;
+    if (hoverGuest) hoverGuest.innerHTML = guest;
+
+    // 기존 HTML 구조가 없으면 생성
+    if (!hoverRoomStatus) {
+      hoverMenu.innerHTML = `
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">방 상태</div>
+          <div class="hover-menu-value" id="hoverRoomStatus">${roomStatus}</div>
+        </div>
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">계약번호</div>
+          <div class="hover-menu-value" id="hoverContractNumber">${contractNumber}</div>
+        </div>
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">계약일자</div>
+          <div class="hover-menu-value" id="hoverContractDate">${contractDate}</div>
+        </div>
+        <div class="hover-menu-row">
+          <div class="hover-menu-label">입실자</div>
+          <div class="hover-menu-value" id="hoverGuest">${guest}</div>
+        </div>
+      `;
+    }
+  }
 
   // 먼저 보이게 해서 크기를 측정
   hoverMenu.style.visibility = "hidden";

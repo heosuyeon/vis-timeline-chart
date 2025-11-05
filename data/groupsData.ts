@@ -6,6 +6,12 @@ export interface GroupColor {
   statusText: string;
 }
 
+export interface RoomStatus {
+  label: string;
+  timestamp: string;
+  color?: string;
+}
+
 export interface GroupJson {
   id: number;
   roomNumber: string;
@@ -18,6 +24,7 @@ export interface GroupJson {
   stayPeriod: string;
   value: number;
   color: GroupColor;
+  roomStatuses?: RoomStatus[]; // 방 상태 데이터 (선택사항)
 }
 
 export var groupsJson: GroupJson[] = [
@@ -37,6 +44,34 @@ export var groupsJson: GroupJson[] = [
       statusBorder: "#ED946B",
       statusText: "#ED946B",
     },
+    // 방 상태 데이터
+    roomStatuses: [
+      {
+        label: "판매신청",
+        timestamp: "25-10-29 09:24:00",
+        color: "#27A644",
+      },
+      {
+        label: "판매오픈",
+        timestamp: "25-10-29 10:32:21",
+        color: "#27A644",
+      },
+      {
+        label: "계약일",
+        timestamp: "25-10-29 13:02:12",
+        color: "#5D6EE2",
+      },
+      {
+        label: "결제요청",
+        timestamp: "25-10-29 13:08:08",
+        color: "#7AABF9",
+      },
+      {
+        label: "결제확인",
+        timestamp: "25-10-29 13:08:08",
+        color: "#7AABF9",
+      },
+    ],
   },
   {
     id: 1,

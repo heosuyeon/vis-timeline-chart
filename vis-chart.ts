@@ -1,12 +1,16 @@
 import { Timeline } from "vis-timeline/peer";
+import { DataSet } from "vis-data";
 import "vis-timeline/styles/vis-timeline-graph2d.min.css";
 import "sweetalert2/dist/sweetalert2.min.css";
 const moment = require("moment");
 require("moment/locale/ko");
 moment.locale("ko");
-
 import { createGroupsDataSet } from "./data/groupsData";
 import { createItemsDataSet } from "./data/itemsData";
+import {
+  createItemsFromServerData,
+  fetchItemsFromServer,
+} from "./utils/apiUtils";
 import { createTimelineOptions } from "./config/timelineOptions";
 import { setupTimelineEventHandlers } from "./handlers/timelineHandlers";
 import { setupMenuEventListeners } from "./handlers/menuHandlers";
@@ -14,7 +18,7 @@ import { applyInlineStyles } from "./styles/inlineStyles";
 import { logEvent } from "./handlers/logHandlers";
 
 // DOM이 로드된 후 실행
-function initTimeline() {
+function initTimeline(serverItems?: DataSet<any>) {
   // 타임라인 컨테이너
   var container = document.getElementById("visualization");
   if (!container) {
@@ -24,7 +28,8 @@ function initTimeline() {
 
   // 데이터셋 생성
   var groups = createGroupsDataSet();
-  var items = createItemsDataSet();
+  // 서버 데이터가 있으면 사용, 없으면 기본 데이터 사용
+  var items = serverItems || createItemsDataSet();
 
   // 타임라인 인스턴스
   var timeline: Timeline | null = null;
@@ -65,10 +70,66 @@ function initTimeline() {
   }
 }
 
+// 서버에서 데이터를 가져와서 타임라인 초기화 (선택사항)
+async function initTimelineWithServerData(
+  itemsApiUrl?: string,
+  roomsApiUrl?: string
+) {
+  if (itemsApiUrl) {
+    try {
+      const { items: itemsData, rooms: roomsData } = await fetchItemsFromServer(
+        itemsApiUrl,
+        roomsApiUrl
+      );
+      const items = createItemsFromServerData(itemsData, roomsData);
+      initTimeline(items);
+    } catch (error) {
+      console.error(
+        "Failed to load data from server, using default data:",
+        error
+      );
+      initTimeline();
+    }
+  } else {
+    initTimeline();
+  }
+}
+
 // DOM이 준비되면 초기화
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initTimeline);
+  document.addEventListener("DOMContentLoaded", function () {
+    // 서버 API URL이 있다면 여기에 설정
+    // 예: initTimelineWithServerData("/api/items");
+    // 또는 기본 데이터 사용
+    initTimeline();
+  });
 } else {
   // DOM이 이미 로드된 경우
+  // 서버 API URL이 있다면 여기에 설정
+  // 예: initTimelineWithServerData("/api/items");
+  // 또는 기본 데이터 사용
   initTimeline();
 }
+
+// 전역 함수로 export (서버 데이터 업데이트용)
+(window as any).updateTimelineItems = async function (
+  itemsApiUrl: string,
+  roomsApiUrl?: string
+) {
+  try {
+    const { items: itemsData, rooms: roomsData } = await fetchItemsFromServer(
+      itemsApiUrl,
+      roomsApiUrl
+    );
+    const items = createItemsFromServerData(itemsData, roomsData);
+    // 타임라인 재초기화 또는 items 업데이트
+    const container = document.getElementById("visualization");
+    if (container) {
+      // 기존 타임라인이 있다면 제거하고 새로 생성
+      // 또는 items만 업데이트
+      initTimeline(items);
+    }
+  } catch (error) {
+    console.error("Failed to update timeline items:", error);
+  }
+};

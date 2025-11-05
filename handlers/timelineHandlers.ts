@@ -60,6 +60,22 @@ export function setupTimelineEventHandlers(
 
     // 아이템을 클릭한 경우
     if (properties.item && properties.event) {
+      // 아이템 데이터 가져오기
+      var itemData: any = items.get(properties.item);
+      var isGroupLabel = itemData && itemData.className === "group-label";
+
+      // group-label 아이템을 클릭한 경우 컨텍스트 메뉴 표시하지 않음
+      if (isGroupLabel) {
+        // 호버 메뉴 숨기기
+        hideHoverMenu();
+        // 기존 컨텍스트 메뉴가 있으면 닫기
+        if (existingMenu) {
+          closeContextMenu();
+        }
+        return; // group-label 클릭 시 더 이상 처리하지 않음
+      }
+
+      // 일반 아이템인 경우에만 컨텍스트 메뉴 표시
       // 클릭 이벤트 전파 중지 (메뉴를 닫는 리스너가 먼저 실행되지 않도록)
       properties.event.stopPropagation();
 
@@ -122,19 +138,13 @@ export function setupTimelineEventHandlers(
 
     // 아이템 위에 있을 때
     if (properties.item && properties.event) {
-      // 같은 아이템이고 메뉴가 이미 표시되어 있으면 위치 계산하지 않음
-      if (
-        getHoverMenuShown() &&
-        getCurrentHoveredItemId() === properties.item
-      ) {
-        return;
-      }
+      // 아이템 데이터 가져오기
+      var itemData: any = items.get(properties.item);
+      var isGroupLabel = itemData && itemData.className === "group-label";
 
-      // 다른 아이템으로 변경된 경우에만 위치 계산 (아이템 ID 저장)
-      var itemY = properties.event.clientY;
-
-      // 아이템 ID로 DOM 요소 찾기
-      if (properties.item) {
+      // group-label 아이템인 경우 카운트 뱃지 위에 있는지 확인
+      if (isGroupLabel) {
+        // 아이템 요소 찾기
         var itemElement: HTMLElement | null = null;
 
         // 방법 1: data-id 속성으로 찾기
@@ -162,13 +172,99 @@ export function setupTimelineEventHandlers(
           }
         }
 
+        // 카운트 뱃지 찾기 및 마우스 위치 확인
+        var isOverCountBadge = false;
         if (itemElement) {
-          var rect = itemElement.getBoundingClientRect();
-          itemY = rect.top + rect.height / 2; // 아이템의 정확한 중간 y 위치
+          var countBadge = itemElement.querySelector(
+            ".count-badge"
+          ) as HTMLElement;
+          if (countBadge) {
+            var badgeRect = countBadge.getBoundingClientRect();
+            var mouseX = properties.event.clientX;
+            var mouseY = properties.event.clientY;
+            // 마우스 위치가 카운트 뱃지 영역 안에 있는지 확인
+            if (
+              mouseX >= badgeRect.left &&
+              mouseX <= badgeRect.right &&
+              mouseY >= badgeRect.top &&
+              mouseY <= badgeRect.bottom
+            ) {
+              isOverCountBadge = true;
+            }
+          }
         }
-      }
 
-      showHoverMenu(properties.event.clientX, itemY, properties, items);
+        // 카운트 뱃지 위에 있을 때만 메뉴 표시
+        if (isOverCountBadge) {
+          // 같은 아이템이고 메뉴가 이미 표시되어 있으면 위치 계산하지 않음
+          if (
+            getHoverMenuShown() &&
+            getCurrentHoveredItemId() === properties.item
+          ) {
+            return;
+          }
+
+          var itemY = properties.event.clientY;
+          if (itemElement) {
+            var rect = itemElement.getBoundingClientRect();
+            itemY = rect.top + rect.height / 2; // 아이템의 정확한 중간 y 위치
+          }
+
+          showHoverMenu(properties.event.clientX, itemY, properties, items);
+        } else {
+          // 카운트 뱃지 위가 아니면 메뉴 숨기기
+          hideHoverMenu();
+        }
+      } else {
+        // 일반 아이템인 경우 기존 로직 유지
+        // 같은 아이템이고 메뉴가 이미 표시되어 있으면 위치 계산하지 않음
+        if (
+          getHoverMenuShown() &&
+          getCurrentHoveredItemId() === properties.item
+        ) {
+          return;
+        }
+
+        // 다른 아이템으로 변경된 경우에만 위치 계산 (아이템 ID 저장)
+        var itemY = properties.event.clientY;
+
+        // 아이템 ID로 DOM 요소 찾기
+        if (properties.item) {
+          var itemElement: HTMLElement | null = null;
+
+          // 방법 1: data-id 속성으로 찾기
+          itemElement = document.querySelector(
+            '.vis-item[data-id="' + properties.item + '"]'
+          ) as HTMLElement;
+
+          // 방법 2: 타임라인 내부에서 마우스 위치로 찾기
+          if (!itemElement && properties.event) {
+            var timelineItems = document.querySelectorAll(
+              ".vis-timeline .vis-item"
+            );
+            for (var i = 0; i < timelineItems.length; i++) {
+              var item = timelineItems[i] as HTMLElement;
+              var rect = item.getBoundingClientRect();
+              if (
+                properties.event.clientY >= rect.top &&
+                properties.event.clientY <= rect.bottom &&
+                properties.event.clientX >= rect.left &&
+                properties.event.clientX <= rect.right
+              ) {
+                itemElement = item;
+                break;
+              }
+            }
+          }
+
+          if (itemElement) {
+            var rect = itemElement.getBoundingClientRect();
+            itemY = rect.top + rect.height / 2; // 아이템의 정확한 중간 y 위치
+          }
+        }
+
+        showHoverMenu(properties.event.clientX, itemY, properties, items);
+      }
     } else {
       // 아이템 위가 아니고 메뉴 위도 아니면 메뉴 숨기기
       if (!getIsHoverMenuHovered()) {
