@@ -107,7 +107,7 @@ export async function fetchItemsFromServer(
     }
     const itemsData: ServerItemData[] = await itemsResponse.json();
 
-    // 방 데이터 가져오기 (선택사항)
+    // 방 데이터 가져오기
     let roomsData: ServerRoomData[] | undefined;
     if (roomsApiUrl) {
       const roomsResponse = await fetch(roomsApiUrl);

@@ -2,6 +2,8 @@ import { Timeline } from "vis-timeline/peer";
 import { DataSet } from "vis-data";
 import "vis-timeline/styles/vis-timeline-graph2d.min.css";
 import "sweetalert2/dist/sweetalert2.min.css";
+import "./css/vis-timeline.override.css";
+import "./css/common.css";
 const moment = require("moment");
 require("moment/locale/ko");
 moment.locale("ko");
@@ -70,7 +72,7 @@ function initTimeline(serverItems?: DataSet<any>) {
   }
 }
 
-// 서버에서 데이터를 가져와서 타임라인 초기화 (선택사항)
+// 서버에서 데이터를 가져와서 타임라인 초기화
 async function initTimelineWithServerData(
   itemsApiUrl?: string,
   roomsApiUrl?: string
@@ -96,20 +98,10 @@ async function initTimelineWithServerData(
 }
 
 // DOM이 준비되면 초기화
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", function () {
-    // 서버 API URL이 있다면 여기에 설정
-    // 예: initTimelineWithServerData("/api/items");
-    // 또는 기본 데이터 사용
-    initTimeline();
-  });
-} else {
-  // DOM이 이미 로드된 경우
-  // 서버 API URL이 있다면 여기에 설정
-  // 예: initTimelineWithServerData("/api/items");
-  // 또는 기본 데이터 사용
+document.addEventListener("DOMContentLoaded", () => {
+  // initTimelineWithServerData("/api/items");
   initTimeline();
-}
+});
 
 // 전역 함수로 export (서버 데이터 업데이트용)
 (window as any).updateTimelineItems = async function (

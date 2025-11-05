@@ -5,7 +5,7 @@ module.exports = (env, argv) => {
   const isProduction = argv.mode === "production";
 
   return {
-    entry: "./vis-chart.ts",
+    entry: "./index.ts",
     mode: isProduction ? "production" : "development",
     module: {
       rules: [
