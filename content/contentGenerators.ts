@@ -47,7 +47,11 @@ export function getGroupLabelContent(
   countBedgeDiv.style.left = "80%";
   countBedgeDiv.style.backgroundColor = "#252B39";
   countBedgeDiv.style.borderRadius = "50%";
-  countBedgeDiv.style.padding = "4px 6px";
+  countBedgeDiv.style.width = "20px";
+  countBedgeDiv.style.height = "20px";
+  countBedgeDiv.style.display = "flex";
+  countBedgeDiv.style.alignItems = "center";
+  countBedgeDiv.style.justifyContent = "center";
   countBedgeDiv.style.fontSize = "12px";
   countBedgeDiv.style.fontWeight = "700";
   countBedgeDiv.style.color = "white";

@@ -1,12 +1,13 @@
 #visualization {
   height: 400px;
-  border: 1px solid lightgray;
+  /* border: 1px solid #eaeaea; */
 }
 .timeline-item {
   /* background-color: lightblue; */
   /* padding: 2px; */
   /* border-radius: 5px;
     border-color: transparent !important; */
+  /* border-color: #eaeaea !important; */
 }
 .vis-item {
   padding: 6px !important;
@@ -77,15 +78,22 @@
   width: 100%;
 }
 /* 타임라인 그리드 스타일 */
-.vis-text.vis-minor {
-  font-size: 12px !important;
-  text-align: center !important;
+.vis-time-axis .vis-grid.vis-sunday {
+  border-right: 1px solid #cacaca;
 }
+
 .vis-time-axis .vis-major {
   font-weight: bold !important;
   color: #495057 !important;
   font-size: 12px !important;
+  /* background: white !important; */
 }
+.vis-text.vis-minor {
+  font-size: 12px !important;
+  text-align: center !important;
+  border-top: 1px solid #cacaca;
+}
+
 /* 그리드 오늘 색상 변경 */
 .vis-time-axis .vis-minor.vis-today {
   background: #51318f;
@@ -96,6 +104,7 @@
 .vis-time-axis .vis-text.vis-today {
   color: white !important;
 }
+
 /* 그리드 휴일 색상 변경 */
 .vis-time-axis .vis-major.vis-saturday,
 .vis-time-axis .vis-major.vis-sunday {
@@ -107,7 +116,6 @@
 .vis-time-axis .vis-minor.vis-sunday {
   background: #e44343;
 }
-/* gray background in weekends, white text color */
 .vis-time-axis .vis-grid.vis-saturday,
 .vis-time-axis .vis-grid.vis-sunday {
   background: #fff4f4 !important;
@@ -115,6 +123,26 @@
 .vis-time-axis .vis-text.vis-saturday,
 .vis-time-axis .vis-text.vis-sunday {
   color: white;
+}
+
+/* 그리드 청소날 색상 변경 */
+.vis-time-axis .vis-minor.vis-tuesday {
+  background: #f220a514;
+  border-bottom: 2px solid #f220a5 !important;
+  padding-bottom: 0px;
+}
+.vis-time-axis .vis-grid.vis-tuesday {
+  background: white;
+}
+.vis-time-axis .vis-text.vis-tuesday {
+  color: #f220a5 !important;
+}
+
+.vis-time-axis {
+  /* background: white !important; */
+}
+.vis-day1 {
+  /* border-left: 1px solid #cacaca; */
 }
 
 /* 진행 중인 '이용중' 일정 스타일 */
