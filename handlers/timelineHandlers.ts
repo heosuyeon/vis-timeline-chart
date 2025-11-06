@@ -210,10 +210,21 @@ export function setupTimelineEventHandlers(
     if (properties.item && properties.event) {
       // 아이템 데이터 가져오기
       var itemData: any = items.get(properties.item);
-      var isGroupLabel = itemData && itemData.className === "room-statuses";
+      var isGroupLabel =
+        itemData &&
+        itemData.className &&
+        String(itemData.className).includes("room-statuses");
 
-      // room-statuses 아이템인 경우 카운트 뱃지 위에 있는지 확인
+      // room-statuses 아이템인 경우
       if (isGroupLabel) {
+        // 같은 아이템이고 메뉴가 이미 표시되어 있으면 위치 계산하지 않음
+        if (
+          getHoverMenuShown() &&
+          getCurrentHoveredItemId() === properties.item
+        ) {
+          return;
+        }
+
         // 아이템 요소 찾기
         var itemElement: HTMLElement | null = null;
 
@@ -242,49 +253,13 @@ export function setupTimelineEventHandlers(
           }
         }
 
-        // 카운트 뱃지 찾기 및 마우스 위치 확인
-        var isOverCountBadge = false;
+        var itemY = properties.event.clientY;
         if (itemElement) {
-          var countBadge = itemElement.querySelector(
-            ".count-badge"
-          ) as HTMLElement;
-          if (countBadge) {
-            var badgeRect = countBadge.getBoundingClientRect();
-            var mouseX = properties.event.clientX;
-            var mouseY = properties.event.clientY;
-            // 마우스 위치가 카운트 뱃지 영역 안에 있는지 확인
-            if (
-              mouseX >= badgeRect.left &&
-              mouseX <= badgeRect.right &&
-              mouseY >= badgeRect.top &&
-              mouseY <= badgeRect.bottom
-            ) {
-              isOverCountBadge = true;
-            }
-          }
+          var rect = itemElement.getBoundingClientRect();
+          itemY = rect.top + rect.height / 2; // 아이템의 정확한 중간 y 위치
         }
 
-        // 카운트 뱃지 위에 있을 때만 메뉴 표시
-        if (isOverCountBadge) {
-          // 같은 아이템이고 메뉴가 이미 표시되어 있으면 위치 계산하지 않음
-          if (
-            getHoverMenuShown() &&
-            getCurrentHoveredItemId() === properties.item
-          ) {
-            return;
-          }
-
-          var itemY = properties.event.clientY;
-          if (itemElement) {
-            var rect = itemElement.getBoundingClientRect();
-            itemY = rect.top + rect.height / 2; // 아이템의 정확한 중간 y 위치
-          }
-
-          showHoverMenu(properties.event.clientX, itemY, properties, items);
-        } else {
-          // 카운트 뱃지 위가 아니면 메뉴 숨기기
-          hideHoverMenu();
-        }
+        showHoverMenu(properties.event.clientX, itemY, properties, items);
       } else {
         // 일반 아이템인 경우 기존 로직 유지
         // 같은 아이템이고 메뉴가 이미 표시되어 있으면 위치 계산하지 않음

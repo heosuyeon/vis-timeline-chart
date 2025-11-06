@@ -428,35 +428,40 @@ export function showHoverMenu(
   if (!itemData) return;
 
   // 메뉴 내용 먼저 업데이트 (크기 측정 전에)
-  // room-statuses 아이템인 경우 roomStatuses 리스트 표시
-  if (itemData.className === "room-statuses" && itemData.roomStatuses) {
+  // room-statuses 아이템인 경우 systemItems 리스트 표시
+  if (
+    itemData.className &&
+    String(itemData.className).includes("room-statuses")
+  ) {
     // 기존 내용 제거
     hoverMenu.innerHTML = "";
     hoverMenu.classList.add("black-bg");
     hoverMenu.classList.remove("white-bg");
 
-    // roomStatuses를 timestamp 기준으로 날짜순 정렬
-    var statuses = [...itemData.roomStatuses].sort(function (a: any, b: any) {
-      // timestamp 형식: "25-10-29 09:24:00" -> "2025-10-29 09:24:00"으로 변환
-      var parseTimestamp = function (ts: string): Date {
-        var parts = ts.split(" ");
-        var datePart = parts[0];
-        var timePart = parts[1] || "00:00:00";
-        var dateParts = datePart.split("-");
-        var year = "20" + dateParts[0];
-        return new Date(
-          year + "-" + dateParts[1] + "-" + dateParts[2] + " " + timePart
-        );
-      };
+    // systemItems가 있으면 사용, 없으면 단일 아이템을 배열로 변환
+    var systemItems =
+      itemData.systemItems && Array.isArray(itemData.systemItems)
+        ? itemData.systemItems
+        : itemData.content
+        ? [
+            {
+              content: itemData.content,
+              style: itemData.style,
+              start: itemData.start,
+            },
+          ]
+        : [];
 
-      var dateA = parseTimestamp(a.timestamp);
-      var dateB = parseTimestamp(b.timestamp);
-      return dateA.getTime() - dateB.getTime();
+    // 날짜 순으로 정렬 (start 기준)
+    var sortedSystemItems = [...systemItems].sort(function (a: any, b: any) {
+      var dateA = a.start ? new Date(a.start).getTime() : 0;
+      var dateB = b.start ? new Date(b.start).getTime() : 0;
+      return dateA - dateB;
     });
 
     // 상태 리스트 표시
-    for (var i = 0; i < statuses.length; i++) {
-      var status = statuses[i];
+    for (var i = 0; i < sortedSystemItems.length; i++) {
+      var systemItem = sortedSystemItems[i];
       var row = document.createElement("div");
       row.className = "hover-menu-row";
       row.style.display = "flex";
@@ -468,20 +473,16 @@ export function showHoverMenu(
       colorCircle.style.width = "10px";
       colorCircle.style.height = "10px";
       colorCircle.style.borderRadius = "50%";
-      colorCircle.style.backgroundColor = status.color || "#27A644";
+      colorCircle.style.backgroundColor =
+        systemItem.style?.backgroundColor || "#27A644";
       colorCircle.style.flexShrink = "0";
 
       var label = document.createElement("div");
       label.className = "hover-menu-label";
-      label.textContent = status.label || "";
-
-      var value = document.createElement("div");
-      value.className = "hover-menu-value";
-      value.textContent = `(${status.timestamp})` || "";
+      label.textContent = systemItem.content || "";
 
       row.appendChild(colorCircle);
       row.appendChild(label);
-      row.appendChild(value);
       hoverMenu.appendChild(row);
     }
   } else {
