@@ -7,58 +7,6 @@ export function applyInlineStyles(
 ) {
   if (!container) return;
 
-  // room-statuses 클래스를 가진 아이템만 스타일 적용
-  var itemElements = container.querySelectorAll(".vis-item.room-statuses");
-  for (var i = 0; i < itemElements.length; i++) {
-    var itemElement = itemElements[i] as HTMLElement;
-    var itemContent = itemElement.querySelector(".vis-item-content");
-    if (itemContent) {
-      var firstDiv = itemContent.querySelector("div");
-      if (firstDiv) {
-        // 인라인 스타일이 제거된 경우, 원본 데이터에서 스타일 다시 적용
-        var itemId = itemElement.getAttribute("data-id");
-        if (itemId) {
-          var itemData = items.get(parseInt(itemId, 10));
-          // content가 DOM 요소인 경우
-          if (itemData && itemData.content && itemData.content.nodeType === 1) {
-            // 기존 content를 새로운 요소로 교체
-            itemContent.innerHTML = "";
-            // DOM 요소를 복제하여 추가
-            var clonedContent = itemData.content.cloneNode(true) as HTMLElement;
-            itemContent.appendChild(clonedContent);
-          } else if (itemData && itemData.content) {
-            // content가 문자열인 경우
-            var tempDiv = document.createElement("div");
-            tempDiv.innerHTML = itemData.content;
-            var sourceDiv = tempDiv.querySelector("div");
-            if (sourceDiv) {
-              var styles = sourceDiv.getAttribute("style");
-              if (styles) {
-                firstDiv.setAttribute("style", styles);
-                // 자식 요소들도 스타일 적용
-                var sourceSpans = sourceDiv.querySelectorAll("span");
-                var targetSpans = firstDiv.querySelectorAll("span");
-                for (
-                  var j = 0;
-                  j < sourceSpans.length && j < targetSpans.length;
-                  j++
-                ) {
-                  var sourceStyle = sourceSpans[j].getAttribute("style");
-                  if (sourceStyle) {
-                    (targetSpans[j] as HTMLElement).setAttribute(
-                      "style",
-                      sourceStyle
-                    );
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   // 모든 vis-label 찾기
   var labels = container.querySelectorAll(".vis-label");
 
@@ -126,6 +74,26 @@ export function applyInlineStyles(
             );
           }
         }
+      }
+    }
+  }
+
+  // room-statuses 요소에 data-count 속성 추가 (자손의 div[data-count] 값 사용)
+  var roomStatusItems = container.querySelectorAll(".vis-item.room-statuses");
+  for (var i = 0; i < roomStatusItems.length; i++) {
+    var roomStatusItem = roomStatusItems[i] as HTMLElement;
+    // 이미 data-count가 설정되어 있으면 스킵
+    if (roomStatusItem.hasAttribute("data-count")) {
+      continue;
+    }
+    // 자손 중에 div[data-count] 찾기
+    var countDiv = roomStatusItem.querySelector(
+      "div[data-count]"
+    ) as HTMLElement;
+    if (countDiv) {
+      var countValue = countDiv.getAttribute("data-count");
+      if (countValue) {
+        roomStatusItem.setAttribute("data-count", countValue);
       }
     }
   }

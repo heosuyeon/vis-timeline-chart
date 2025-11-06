@@ -1,10 +1,5 @@
 import { DataSet } from "vis-data";
 import { parseDateString, parseEndDateString } from "../utils/dateUtils";
-import {
-  getGroupLabelContent,
-  getItemContent,
-} from "../content/contentGenerators";
-import { groupsJson } from "./groupsData";
 
 export function createItemsDataSet(): DataSet<any> {
   // 기본 아이템 데이터
@@ -12,7 +7,9 @@ export function createItemsDataSet(): DataSet<any> {
     {
       id: "0",
       group: 0,
-      content: getItemContent("2025-10-01", "2025-10-31", "김한수"),
+      timeLineType: "contract",
+      status: "in-progress",
+      // content: getItemContent("2025-10-01", "2025-10-31", "김한수"),
       currentGuest: "김한수",
       start: parseDateString("2025-10-01"),
       end: parseEndDateString("2025-10-31"),
@@ -33,7 +30,9 @@ export function createItemsDataSet(): DataSet<any> {
     {
       id: "0-1",
       group: 0,
-      content: getItemContent("2025-11-01", "2025-11-30", "김한수"),
+      timeLineType: "contract",
+      status: "in-progress",
+      // content: getItemContent("2025-11-01", "2025-11-30", "김한수"),
       currentGuest: "김한수",
       start: parseDateString("2025-11-01"),
       end: parseEndDateString("2025-11-30"),
@@ -54,7 +53,9 @@ export function createItemsDataSet(): DataSet<any> {
     {
       id: "2",
       group: 1,
-      content: getItemContent("2025-10-20", "2025-11-20", "이정민"),
+      timeLineType: "contract",
+      status: "for-sale",
+      // content: getItemContent("2025-10-20", "2025-11-20", "이정민"),
       currentGuest: "이정민",
       start: parseDateString("2025-10-20"),
       end: parseEndDateString("2025-11-20"),
@@ -75,12 +76,14 @@ export function createItemsDataSet(): DataSet<any> {
     {
       id: "3",
       group: 2,
-      content: getItemContent("2025-11-04", "2025-12-04", "황정민"),
+      timeLineType: "contract",
+      status: "leave",
+      // content: getItemContent("2025-11-04", "2025-12-04", "황정민"),
       currentGuest: "황정민",
       start: parseDateString("2025-11-04"),
       end: parseEndDateString("2025-12-04"),
       style: "border: 2px solid transparent; color: white; border-radius: 8px;",
-      className: "checked-out",
+      className: "leave",
       // 호버 메뉴용 정보
       contractNumber: "20251104003",
       guest: "황정민 / 31 / M(010-3456-7890)",
@@ -95,7 +98,107 @@ export function createItemsDataSet(): DataSet<any> {
     },
   ];
 
-  // group별로 아이템 그룹핑
+  // 방 상태 아이템 데이터
+  const roomStatuses: any[] = [
+    {
+      timeLineType: "system",
+      id: "room-0-statuses-0",
+      group: 0,
+      content: "판매신청 20-10-01 10:40:08 김소연(관리자)",
+      start: parseDateString("2025-10-01"),
+      end: parseEndDateString("2025-10-01"),
+      className: "room-statuses",
+      style: {
+        backgroundColor: "#27a644",
+      },
+    },
+    {
+      id: "room-0-statuses-1",
+      group: 0,
+      timeLineType: "system",
+      content: "예약금 요청 20-10-01 10:40:08 김소연(관리자)",
+      start: parseDateString("2025-10-01"),
+      end: parseEndDateString("2025-10-01"),
+      className: "room-statuses",
+      style: {
+        backgroundColor: "#35BB88",
+      },
+    },
+    {
+      id: "room-0-statuses-2",
+      group: 0,
+      timeLineType: "system",
+      content: "추가 결제완료 20-10-25 10:40:08 김소연(관리자)",
+      start: parseDateString("2025-10-25"),
+      end: parseEndDateString("2025-10-25"),
+      className: "room-statuses",
+      style: {
+        backgroundColor: "#4A67DD",
+      },
+    },
+    {
+      id: "room-1-statuses-0",
+      group: 1,
+      timeLineType: "system",
+      content: "계약일자 20-10-20 10:40:08 김소연(관리자)",
+      start: parseDateString("2025-10-20"),
+      end: parseEndDateString("2025-10-20"),
+      className: "room-statuses",
+      style: {
+        backgroundColor: "#4A67DD",
+      },
+    },
+    {
+      id: "room-1-statuses-1",
+      group: 1,
+      timeLineType: "system",
+      content: "판매취소 20-10-20 10:40:08 김소연(관리자)",
+      start: parseDateString("2025-10-20"),
+      end: parseEndDateString("2025-10-20"),
+      className: "room-statuses",
+      style: {
+        backgroundColor: "#D25454",
+      },
+    },
+    {
+      id: "room-1-statuses-2",
+      group: 1,
+      timeLineType: "system",
+      content: "판매취소 20-10-20 10:40:08 김소연(관리자)",
+      start: parseDateString("2025-10-20"),
+      end: parseEndDateString("2025-10-20"),
+      className: "room-statuses",
+      style: {
+        backgroundColor: "#D25454",
+      },
+    },
+    {
+      id: "room-1-statuses-3",
+      group: 1,
+      timeLineType: "system",
+      content: "판매취소 20-10-20 10:40:08 김소연(관리자)",
+      start: parseDateString("2025-10-20"),
+      end: parseEndDateString("2025-10-20"),
+      className: "room-statuses",
+      style: {
+        backgroundColor: "#D25454",
+      },
+    },
+    {
+      id: "room-1-statuses-4",
+      group: 1,
+      timeLineType: "system",
+      content: "판매취소 20-10-20 10:40:08 김소연(관리자)",
+      start: parseDateString("2025-10-20"),
+      end: parseEndDateString("2025-10-20"),
+      className: "room-statuses",
+      style: {
+        backgroundColor: "#D25454",
+      },
+    },
+  ];
+
+  // group(방)별로 계약 아이템 그룹핑
   const itemsByGroup = new Map<number, any[]>();
   baseItems.forEach((item) => {
     const groupId = item.group;
@@ -105,6 +208,16 @@ export function createItemsDataSet(): DataSet<any> {
     itemsByGroup.get(groupId)!.push(item);
   });
 
+  // group(방)별로 방 상태 아이템 그룹핑
+  const roomStatusesByGroup = new Map<number, any[]>();
+  roomStatuses.forEach((item) => {
+    const groupId = item.group;
+    if (!roomStatusesByGroup.has(groupId)) {
+      roomStatusesByGroup.set(groupId, []);
+    }
+    roomStatusesByGroup.get(groupId)!.push(item);
+  });
+
   // 결과 배열 초기화
   const resultItems: any[] = [];
 
@@ -112,64 +225,87 @@ export function createItemsDataSet(): DataSet<any> {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
 
-  // 각 그룹별로 처리
-  itemsByGroup.forEach((items, groupId) => {
-    // 해당 그룹의 일반 아이템들을 먼저 추가
+  // 모든 그룹 ID 수집 및 정렬
+  const allGroupIds = Array.from(
+    new Set([
+      ...Array.from(itemsByGroup.keys()),
+      ...Array.from(roomStatusesByGroup.keys()),
+    ])
+  ).sort((a, b) => a - b);
+
+  // 같은 날짜의 system 아이템들을 합치는 헬퍼 함수
+  const mergeSystemItemsByDate = (items: any[]): any[] => {
+    // 날짜 문자열로 변환 (YYYY-MM-DD 형식)
+    const getDateKey = (date: Date): string => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    // 그룹 ID와 날짜를 키로 하여 아이템들을 묶음
+    const mergedMap = new Map<string, any[]>();
     items.forEach((item) => {
-      // end 날짜가 현재 날짜보다 이전인지 확인 (시간 제외)
-      const itemEnd = new Date(item.end);
-      itemEnd.setHours(0, 0, 0, 0);
-
-      // 지난 일정인 경우 -past를 클래스명 뒤에 추가
-      if (itemEnd < now) {
-        item.className = item.className ? `${item.className}-past` : "";
+      const dateKey = `${item.group}-${getDateKey(item.start)}`;
+      if (!mergedMap.has(dateKey)) {
+        mergedMap.set(dateKey, []);
       }
-
-      resultItems.push(item);
+      mergedMap.get(dateKey)!.push(item);
     });
 
-    // 같은 그룹에 아이템이 2개 이상인 경우 room-statuses 추가
-    if (items.length >= 2) {
-      // 가장 빠른 start 날짜 찾기
-      const earliestStart = items.reduce((earliest, item) => {
-        return item.start < earliest ? item.start : earliest;
-      }, items[0].start);
+    // 합쳐진 아이템들을 생성
+    const mergedItems: any[] = [];
+    mergedMap.forEach((itemList, dateKey) => {
+      if (itemList.length === 1) {
+        // 아이템이 하나면 그대로 추가
+        mergedItems.push(itemList[0]);
+      } else {
+        // 여러 아이템이면 하나로 합침
+        const firstItem = itemList[0];
+        const mergedItem = {
+          ...firstItem,
+          id: `${firstItem.group}-merged-${getDateKey(firstItem.start)}`,
+          systemItems: itemList, // 원본 아이템들을 배열로 저장
+          content: itemList.map((item: any) => item.content).join(", "), // 임시로 content 합침 (템플릿에서 사용)
+          systemItemsCount: itemList.length, // 배지 표시를 위한 카운트
+        };
+        mergedItems.push(mergedItem);
+      }
+    });
 
-      // 가장 늦은 end 날짜 찾기
-      const latestEnd = items.reduce((latest, item) => {
-        return item.end > latest ? item.end : latest;
-      }, items[0].end);
+    return mergedItems;
+  };
 
-      // room-statuses의 시작일은 가장 빠른 start 날짜의 하루 전
-      const groupLabelStart = new Date(earliestStart);
-      groupLabelStart.setDate(groupLabelStart.getDate() - 1);
+  // 각 그룹별로 처리
+  allGroupIds.forEach((groupId) => {
+    // 1. 먼저 해당 그룹의 방 상태 아이템들을 추가 (먼저 렌더링되어 위에 표시)
+    const groupRoomStatuses = roomStatusesByGroup.get(groupId) || [];
+    // 같은 날짜의 아이템들을 합침
+    const mergedSystemItems = mergeSystemItemsByDate(groupRoomStatuses);
+    // 시작 날짜 기준으로 정렬
+    mergedSystemItems
+      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+      .forEach((item) => {
+        resultItems.push(item);
+      });
 
-      // currentGuest는 첫 번째 아이템의 것을 사용
-      const currentGuest = items[0].currentGuest;
+    // 2. 그 다음 해당 그룹의 계약 아이템들을 추가 (나중에 렌더링되어 아래에 표시)
+    const items = itemsByGroup.get(groupId) || [];
+    // 시작 날짜 기준으로 정렬
+    items
+      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
+      .forEach((item) => {
+        // end 날짜가 현재 날짜보다 이전인지 확인 (시간 제외)
+        const itemEnd = new Date(item.end);
+        itemEnd.setHours(0, 0, 0, 0);
 
-      // 해당 그룹의 roomStatuses 가져오기
-      const groupData = groupsJson.find((g) => g.id === groupId);
-      const roomStatuses = groupData?.roomStatuses;
+        // 지난 일정인 경우 -past를 클래스명 뒤에 추가
+        if (itemEnd < now) {
+          item.className = item.className ? `${item.className}-past` : "";
+        }
 
-      // room-statuses 아이템 생성 (roomStatuses를 전달하여 컬러와 개수 표시)
-      const groupLabelItem = {
-        id: `room-statuses-${groupId}`,
-        group: groupId,
-        content: getGroupLabelContent(
-          groupLabelStart,
-          latestEnd,
-          roomStatuses,
-          undefined
-        ),
-        currentGuest: currentGuest,
-        className: "room-statuses",
-        start: groupLabelStart,
-        end: latestEnd,
-        roomStatuses: roomStatuses, // 호버 메뉴에서 사용하기 위해 저장
-      };
-
-      resultItems.push(groupLabelItem);
-    }
+        resultItems.push(item);
+      });
   });
 
   return new DataSet<any>(resultItems);

@@ -63,20 +63,11 @@
   gap: 8px;
   text-wrap: nowrap;
 }
-.vis-item.room-statuses {
-  padding: 0 !important;
-  border: none !important;
-  background-color: transparent !important;
-  &.vis-selected {
-    background-color: transparent !important;
-  }
-}
+
 .vis-item-content {
   padding: 0 !important;
 }
-.room-statuses .vis-item-content {
-  width: 100%;
-}
+
 /* 타임라인 그리드 스타일 */
 .vis-time-axis .vis-grid.vis-sunday {
   border-right: 1px solid #cacaca;
@@ -189,23 +180,23 @@
 }
 
 /* 진행 중인 '퇴실' 일정 스타일 */
-.vis-item.checked-out {
+.vis-item.leave {
   background-color: #aa00d0;
 }
 /* 지나간 '퇴실' 일정 스타일 */
-.vis-item.checked-out-past {
+.vis-item.leave-past {
   background: #aa00d033;
   color: #aa00d0 !important;
 }
 /* 퇴실 중 일정 호버 및 선택시 */
-.vis-item.checked-out:hover,
-.vis-item.checked-out-past:hover,
-.vis-item.checked-out.vis-selected {
+.vis-item.leave:hover,
+.vis-item.leave-past:hover,
+.vis-item.leave.vis-selected {
   border: 2px solid #7c0098 !important;
   box-shadow: 0px 4px 8px 0px #00000014;
 }
 /* 지나간 퇴실 중 일정 선택시 */
-.vis-item.checked-out-past.vis-selected {
+.vis-item.leave-past.vis-selected {
   border: 2px solid #7c0098 !important;
   box-shadow: 0px 4px 8px 0px #00000014;
 }
@@ -213,3 +204,64 @@
 .vis-time-axis .vis-grid:hover {
   background: slateblue !important;
 } */
+
+.timeline-item-guest-name {
+  font-size: 13px;
+  font-weight: 700;
+  margin-right: 4px;
+}
+.timeline-item-date {
+  font-size: 11px;
+}
+
+.vis-item.room-statuses {
+  position: relative; /* 배지 위치를 위한 상대 위치 설정 */
+  border-radius: 8px;
+  background: #00000005 !important;
+  border: none !important;
+  height: 68px;
+  top: 4px !important;
+  .vis-item-overflow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .vis-item-content > div {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+      span {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        text-indent: -9999px;
+        font-size: 0;
+      }
+    }
+  }
+}
+.vis-item.room-statuses:hover {
+  background: #00000014 !important;
+}
+
+/* room-statuses 자손 중에 div[data-count]가 있으면 .vis-item.room-statuses:after에 배지 표시 */
+.vis-item.room-statuses:has(div[data-count]):after {
+  content: attr(data-count);
+  position: absolute;
+  top: -4px;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #252b39;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  z-index: 1000;
+}

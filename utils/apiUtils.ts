@@ -1,9 +1,6 @@
 import { DataSet } from "vis-data";
 import { parseDateString, parseEndDateString } from "./dateUtils";
-import {
-  getItemContent,
-  getGroupLabelContent,
-} from "../content/contentGenerators";
+import { getItemContent } from "../content/contentGenerators";
 
 // 방 상태 데이터 타입 (최대 4개)
 export interface RoomStatus {
@@ -56,7 +53,7 @@ export function createItemsFromServerData(
           id: itemIdCounter++,
           group: roomData.groupId,
           // 전체 상태 리스트를 전달 (함수 내에서 최대 4개만 표시)
-          content: getGroupLabelContent(start, end, allStatuses),
+          // content: getGroupLabelContent(start, end, allStatuses),
           currentGuest: roomData.currentGuest,
           className: "room-statuses",
           start: start,

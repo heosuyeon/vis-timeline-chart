@@ -22,22 +22,22 @@ import { logEvent } from "./handlers/logHandlers";
 // DOM이 로드된 후 실행
 function initTimeline(serverItems?: DataSet<any>) {
   // 타임라인 컨테이너
-  var container = document.getElementById("visualization");
+  const container = document.getElementById("visualization");
   if (!container) {
     console.error("Visualization container not found");
     return;
   }
 
   // 데이터셋 생성
-  var groups = createGroupsDataSet();
+  const groups = createGroupsDataSet();
   // 서버 데이터가 있으면 사용, 없으면 기본 데이터 사용
-  var items = serverItems || createItemsDataSet();
+  const items = serverItems || createItemsDataSet();
 
   // 타임라인 인스턴스
-  var timeline: Timeline | null = null;
+  let timeline: Timeline | null = null;
 
   // 옵션 생성 (타임라인 인스턴스를 가져오는 함수 전달)
-  var options = createTimelineOptions(
+  const options = createTimelineOptions(
     container,
     function () {
       return timeline;
@@ -45,7 +45,8 @@ function initTimeline(serverItems?: DataSet<any>) {
     function () {
       applyInlineStyles(container, items);
       logEvent("Timeline initial draw completed", {});
-    }
+    },
+    items
   );
 
   // 타임라인 생성

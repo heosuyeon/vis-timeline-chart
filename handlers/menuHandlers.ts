@@ -496,7 +496,7 @@ export function showHoverMenu(
       statusText = "이용중";
     } else if (itemData.className === "for-sale") {
       statusText = "판매중";
-    } else if (itemData.className === "checked-out") {
+    } else if (itemData.className === "leave") {
       statusText = "퇴실확정";
     } else {
       statusText = "이용중";

@@ -1,3 +1,17 @@
+:root {
+  --state-clean: #f220a5;
+  --state-room-tour: #2bdf0b;
+  --state-open: #27a644;
+  /* --state-vbank: #7AABF9; */
+  --state-for-sale: #7aabf9;
+  --state-reserve: #5d6ee2;
+  --state-in-progress: #ed946b;
+  --state-arrears: #d25454;
+  --state-empty: #9da0ad;
+  /* --state-leave-request: #E3B860; */
+  --state-leave: #aa00d0;
+}
+
 #log {
   height: 200px;
   overflow-y: auto;
