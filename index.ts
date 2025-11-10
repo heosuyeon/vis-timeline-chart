@@ -7,7 +7,7 @@ import "./css/common.css";
 const moment = require("moment");
 require("moment/locale/ko");
 moment.locale("ko");
-import { createGroupsDataSet } from "./data/groupsData";
+import { createGroupsDataSet, groupsJson } from "./data/groupsData";
 import { createItemsDataSet } from "./data/itemsData";
 import {
   createItemsFromServerData,
@@ -59,16 +59,54 @@ function initTimeline(serverItems?: DataSet<any>) {
   setupMenuEventListeners();
 
   // 폼 이벤트 리스너
+  const originalItems = new DataSet(items.get());
+  const originalGroups = new DataSet(groups.get());
+
   const form = document.querySelector("form");
   if (form) {
     form.addEventListener("submit", (e) => {
-      // e.preventDefault();
-      // const name = (document.querySelector("#name") as HTMLInputElement).value;
-      // const filteredItems = items.get({
-      //   fields: ["currentGuest"], // get only the specified properties
-      //   filter: (item) => item.currentGuest === name, // get only items from the specified group
-      // });
-      // items.update(filteredItems);
+      e.preventDefault();
+      const name = (
+        document.querySelector("#name") as HTMLInputElement
+      ).value.trim();
+
+      // 검색어 없으면 전체 복원
+      if (!name) {
+        timeline!.setGroups(originalGroups);
+        timeline!.setItems(originalItems);
+        return;
+      }
+
+      // 1) 아이템 필터
+      const filteredItemsArray = originalItems.get({
+        filter: (item: any) => {
+          return (
+            (item.currentGuest && item.currentGuest.includes(name)) ||
+            (item.contractPerson && item.contractPerson.includes(name)) ||
+            (item.group !== undefined &&
+              groupsJson[item.group] &&
+              (groupsJson[item.group].roomNumber.includes(name) ||
+                groupsJson[item.group].roomName.includes(name)))
+          );
+        },
+      });
+
+      const filteredItems = new DataSet(filteredItemsArray);
+
+      // 2) 해당 아이템들이 속한 그룹 ID만 추출
+      const matchedGroupIds = Array.from(
+        new Set(filteredItemsArray.map((item: any) => item.group))
+      );
+
+      // 3) 그룹 필터
+      const filteredGroupsArray = originalGroups.get({
+        filter: (group: any) => matchedGroupIds.includes(group.id),
+      });
+      const filteredGroups = new DataSet(filteredGroupsArray);
+
+      // 4) 타임라인 업데이트 (순서 중요!)
+      timeline!.setGroups(filteredGroups);
+      timeline!.setItems(filteredItems);
     });
   }
 }
