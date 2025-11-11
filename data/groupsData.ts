@@ -156,12 +156,18 @@ export function createGroupsDataSet(): DataSet<any> {
     currentGuestLabel.textContent = "현재 입실자 ";
     thirdLine.appendChild(currentGuestLabel);
 
-    var currentGuestSpan = document.createElement("span");
+    const currentGuestSpan = document.createElement("span");
     currentGuestSpan.textContent = data.currentGuest + " ";
     thirdLine.appendChild(currentGuestSpan);
 
-    var stayPeriodSpan = document.createElement("span");
-    stayPeriodSpan.textContent = data.stayPeriod;
+    const currentGuestLabel2 = document.createElement("span");
+    currentGuestLabel2.style.color = "#E44343";
+    currentGuestLabel2.textContent = "주자정보 ";
+    thirdLine.appendChild(currentGuestLabel2);
+
+    const stayPeriodSpan = document.createElement("span");
+    // stayPeriodSpan.textContent = data.stayPeriod;
+    stayPeriodSpan.textContent = "-";
     thirdLine.appendChild(stayPeriodSpan);
 
     contentDiv.appendChild(thirdLine);

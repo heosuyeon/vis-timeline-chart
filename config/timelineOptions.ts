@@ -105,7 +105,8 @@ export function createTimelineOptions(
         var d = new Date(date);
         var day = d.getDate();
         var weekday = moment(d).format("ddd"); // Mon, Tue, Wed, etc.
-        return day + " " + weekday;
+        // return day + " " + weekday;
+        return `<div><b>${day}</b> <b>${weekday}</b></div>`;
       },
       // 일, 요일
       majorLabels: function (date: Date, scale: string, step: number) {
