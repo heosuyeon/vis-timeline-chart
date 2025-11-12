@@ -55,6 +55,7 @@ function initTimeline(serverItems?: DataSet<any>) {
 
   const arrowsOptions = {
     followRelationships: true,
+    // hideWhenItemsNotVisible: false,
     color: "#039E00",
     // strokeWidth: 2,
     tooltipConfig: (el, title) => {
@@ -68,7 +69,7 @@ function initTimeline(serverItems?: DataSet<any>) {
       id: "3",
       id_item_1: "2",
       id_item_2: "3",
-      title: "Hello!!!",
+      // title: "Hello!!!",
       color: "#ff0000",
 
       // direction: 1,
@@ -89,8 +90,18 @@ function initTimeline(serverItems?: DataSet<any>) {
 
   const myArrows = new Arrow(timeline, arrowsSpecs, arrowsOptions as any);
 
+  // 초기 렌더링 시 모든 화살표 숨기기
+  setTimeout(() => {
+    arrowsSpecs.forEach((arrowSpec: any, index: number) => {
+      const pathElement = (myArrows as any)._dependencyPath[index];
+      if (pathElement) {
+        pathElement.style.display = "none";
+      }
+    });
+  }, 200);
+
   // 이벤트 핸들러 설정
-  setupTimelineEventHandlers(timeline, items, container);
+  setupTimelineEventHandlers(timeline, items, container, myArrows, arrowsSpecs);
 
   // 메뉴 이벤트 리스너 설정
   setupMenuEventListeners();

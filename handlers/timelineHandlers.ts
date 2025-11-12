@@ -11,15 +11,18 @@ import {
   getHoverMenuShown,
   getCurrentHoveredItemId,
   closeContextMenu,
-  setCurrentHoveredItemId,
 } from "./menuHandlers";
 import { applyInlineStyles } from "../styles/inlineStyles";
 import { groupsJson } from "../data/groupsData";
 
+let currentVisibleArrows: string[] = []; // 현재 보이는 arrow ID들
+
 export function setupTimelineEventHandlers(
   timeline: Timeline,
   items: DataSet<any>,
-  container: HTMLElement | null
+  container: HTMLElement | null,
+  myArrows?: any,
+  arrowsSpecs?: any[]
 ) {
   timeline.on("rangechange", function (properties) {
     logEvent("rangechange", properties);
@@ -29,6 +32,7 @@ export function setupTimelineEventHandlers(
     logEvent("rangechanged", properties);
     setTimeout(function () {
       applyInlineStyles(container, items);
+      // 차트 이동 시 현재 보이는 arrow는 CSS로 유지 (자동으로 위치 업데이트됨)
     }, 100);
   });
 
@@ -160,6 +164,34 @@ export function setupTimelineEventHandlers(
         closeContextMenu();
       }
 
+      // 클릭한 아이템과 연관된 arrow만 보이게 하기
+      if (myArrows && arrowsSpecs) {
+        const clickedItemId = String(properties.item);
+
+        // 모든 화살표 먼저 숨기기
+        arrowsSpecs.forEach((arrowSpec: any, index: number) => {
+          const pathElement = (myArrows as any)._dependencyPath[index];
+          if (pathElement) {
+            pathElement.style.display = "none";
+          }
+        });
+
+        // 클릭한 아이템과 연관된 화살표만 보이게 하기
+        currentVisibleArrows = [];
+        arrowsSpecs.forEach((arrowSpec: any, index: number) => {
+          // 클릭한 아이템이 시작점(id_item_1)인 경우만 보이게 하기
+          const isRelated = String(arrowSpec.id_item_1) === clickedItemId;
+
+          if (isRelated) {
+            const pathElement = (myArrows as any)._dependencyPath[index];
+            if (pathElement) {
+              pathElement.style.display = "block";
+              currentVisibleArrows.push(String(arrowSpec.id));
+            }
+          }
+        });
+      }
+
       // 약간의 지연을 주어 현재 클릭 이벤트가 처리된 후 메뉴 표시
       setTimeout(function () {
         showContextMenu(
@@ -170,9 +202,20 @@ export function setupTimelineEventHandlers(
         );
       }, 10);
     } else {
-      // 아이템 외부를 클릭한 경우 메뉴 닫기
+      // 아이템 외부를 클릭한 경우 메뉴 닫기 및 모든 arrow 숨기기
       if (existingMenu) {
         closeContextMenu();
+      }
+
+      // 모든 화살표 숨기기
+      if (myArrows && arrowsSpecs) {
+        arrowsSpecs.forEach((arrowSpec: any, index: number) => {
+          const pathElement = (myArrows as any)._dependencyPath[index];
+          if (pathElement) {
+            pathElement.style.display = "none";
+          }
+        });
+        currentVisibleArrows = [];
       }
     }
   });
