@@ -105,12 +105,23 @@ export function createTimelineOptions(
         var d = new Date(date);
         var day = d.getDate();
         var weekday = moment(d).format("ddd"); // Mon, Tue, Wed, etc.
+
+        const visTop = document.querySelector(".vis-panel .vis-top");
+        console.log("  visTop.clientWidth", visTop?.clientWidth);
+
+        if (visTop.clientWidth < 800) {
+          return `<div><b>${day}</b></div>`;
+        } else {
+          return `<div><b>${day}</b> <b>${weekday}</b></div>`;
+        }
+
         // return day + " " + weekday;
-        return `<div><b>${day}</b> <b>${weekday}</b></div>`;
+        // return `<div><b>${day}</b> <b>${weekday}</b></div>`;
       },
       // 일, 요일
       majorLabels: function (date: Date, scale: string, step: number) {
         var d = new Date(date);
+
         if (scale === "month") {
           return moment(d).format("YYYY-M");
         } else if (scale === "year") {
