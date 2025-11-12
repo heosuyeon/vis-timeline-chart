@@ -14,6 +14,7 @@
   "dependencies": {
     "moment": "^2.30.1",
     "sweetalert2": "^11.26.3",
+    "timeline-arrows": "^4.8.0",
     "vis-data": "^8.0.3",
     "vis-timeline": "^8.3.1"
   },

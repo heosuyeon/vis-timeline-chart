@@ -18,6 +18,7 @@ import { setupTimelineEventHandlers } from "./handlers/timelineHandlers";
 import { setupMenuEventListeners } from "./handlers/menuHandlers";
 import { applyInlineStyles } from "./styles/inlineStyles";
 import { logEvent } from "./handlers/logHandlers";
+import Arrow from "timeline-arrows";
 
 // DOM이 로드된 후 실행
 function initTimeline(serverItems?: DataSet<any>) {
@@ -51,6 +52,42 @@ function initTimeline(serverItems?: DataSet<any>) {
 
   // 타임라인 생성
   timeline = new Timeline(container, items, groups, options as any);
+
+  const arrowsOptions = {
+    followRelationships: true,
+    color: "#039E00",
+    // strokeWidth: 2,
+    tooltipConfig: (el, title) => {
+      // tooltip initialization
+    },
+  };
+
+  var arrowsSpecs = [
+    { id: "2", id_item_1: "0", id_item_2: "2" },
+    {
+      id: "3",
+      id_item_1: "2",
+      id_item_2: "3",
+      title: "Hello!!!",
+      color: "#ff0000",
+
+      // direction: 1,
+      // line: 1, // dashed
+      // type: 2, // cornered
+    },
+    // { id: 7, id_item_1: 6, id_item_2: 7, line: 1 },
+    // {
+    //     id: 10,
+    //     id_item_1: 3,
+    //     id_item_2: 8,
+    //     title: 'I am a title!!!',
+    //     color: '#00ff00',
+    //     direction: 3,
+    //     line: 1,
+    // },
+  ];
+
+  const myArrows = new Arrow(timeline, arrowsSpecs, arrowsOptions as any);
 
   // 이벤트 핸들러 설정
   setupTimelineEventHandlers(timeline, items, container);
