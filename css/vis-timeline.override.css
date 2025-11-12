@@ -125,8 +125,8 @@
 .vis-time-axis .vis-minor.vis-tuesday {
   /* background: #f220a514; */
   background: white;
-  border-bottom: 2px solid #f220a5 !important;
-  padding-bottom: 6px;
+  border-bottom: 4px solid #f220a5 !important;
+  padding-bottom: 4px;
 }
 .vis-time-axis .vis-grid.vis-tuesday {
   background: white;
